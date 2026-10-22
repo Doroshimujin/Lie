@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>Only Lies — Anonymous Chat</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="app">
+    <header><div class="logo">🎭</div><div><h1>Only Lies</h1><p>Anonymous chat. Make it up. Keep it kind.</p></div></header>
+    <section id="entry" class="card">
+      <h2>Enter the game</h2>
+      <label for="nickname">Nickname (optional)</label>
+      <input id="nickname" maxlength="20" placeholder="Mystery" autocomplete="off">
+      <button id="createBtn" class="primary">🎲 Create a random room</button>
+      <div class="divider"><span>or join with a code</span></div>
+      <label for="roomCode">Room code</label>
+      <div class="join-row"><input id="roomCode" maxlength="5" placeholder="ABCDE" autocomplete="off" autocapitalize="characters"><button id="joinBtn">Join</button></div>
+      <p id="entryError" class="error" role="status"></p>
+      <p class="fine">No account needed. Don't share private information, threats, or real-world identifying details.</p>
+    </section>
+    <section id="chat" class="card hidden">
+      <div class="room-bar"><div><span class="muted">ROOM</span><strong id="activeCode"></strong></div><div id="roomCount">0 people</div><button id="copyBtn" class="small">Copy code</button></div>
+      <div class="game-note">Rule: make things up for fun. No scams, harassment, or personal information.</div>
+      <div id="messages" class="messages" aria-live="polite"></div>
+      <form id="messageForm" class="send-row"><input id="messageInput" maxlength="400" placeholder="Tell a convincing lie…" autocomplete="off" required><button class="primary" type="submit">Send</button></form>
+      <button id="leaveBtn" class="text-button">Leave room</button>
+    </section>
+    <footer>Messages are temporary and may disappear when everyone leaves. Do not use this as a secure or private messaging service.</footer>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/client.js"></script>
+</body>
+</html>
