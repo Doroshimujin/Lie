@@ -11,22 +11,23 @@
   <main class="app">
     <header><div class="logo">🎭</div><div><h1>Only Lies</h1><p>Anonymous chat. Make it up. Keep it kind.</p></div></header>
     <section id="entry" class="card">
-      <h2>Enter the game</h2>
+      <h2>Find your room</h2>
       <label for="nickname">Nickname (optional)</label>
       <input id="nickname" maxlength="20" placeholder="Mystery" autocomplete="off">
-      <button id="createBtn" class="primary">🎲 Create a random room</button>
-      <div class="divider"><span>or join with a code</span></div>
-      <label for="roomCode">Room code</label>
-      <div class="join-row"><input id="roomCode" maxlength="5" placeholder="ABCDE" autocomplete="off" autocapitalize="characters"><button id="joinBtn">Join</button></div>
+      <button id="createBtn" class="primary">🎲 Join a random room</button>
+      <p class="fine">We'll put you into the first room with space. Each room holds up to 10 people. When a room is full, new people go to the next room.</p>
+      <div class="divider"><span>or join an open room</span></div>
+      <label for="roomCode">Room name (for example, room1)</label>
+      <div class="join-row"><input id="roomCode" maxlength="20" placeholder="room1" autocomplete="off" autocapitalize="none"><button id="joinBtn" type="button">Join</button></div>
       <p id="entryError" class="error" role="status"></p>
       <p class="fine">No account needed. Don't share private information, threats, or real-world identifying details.</p>
     </section>
     <section id="chat" class="card hidden">
-      <div class="room-bar"><div><span class="muted">ROOM</span><strong id="activeCode"></strong></div><div id="roomCount">0 people</div><button id="copyBtn" class="small">Copy code</button></div>
+      <div class="room-bar"><div><span class="muted">ROOM</span><strong id="activeCode"></strong></div><div id="roomCount">0/10 people</div><button id="copyBtn" class="small" type="button">Copy room</button></div>
       <div class="game-note">Rule: make things up for fun. No scams, harassment, or personal information.</div>
       <div id="messages" class="messages" aria-live="polite"></div>
       <form id="messageForm" class="send-row"><input id="messageInput" maxlength="400" placeholder="Tell a convincing lie…" autocomplete="off" required><button class="primary" type="submit">Send</button></form>
-      <button id="leaveBtn" class="text-button">Leave room</button>
+      <button id="leaveBtn" class="text-button" type="button">Leave room</button>
     </section>
     <footer>Messages are temporary and may disappear when everyone leaves. Do not use this as a secure or private messaging service.</footer>
   </main>
