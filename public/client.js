@@ -8,27 +8,38 @@ const messages = document.getElementById("messages");
 let activeRoom = "";
 
 function showError(message) { entryError.textContent = message || ""; }
+function showJoinedRoom(result) {
+  activeRoom = result.code;
+  document.getElementById("activeCode").textContent = result.label || result.code;
+  entry.classList.add("hidden");
+  chat.classList.remove("hidden");
+  messages.replaceChildren();
+  document.getElementById("messageInput").focus();
+}
+function joinRandomRoom() {
+  showError("");
+  socket.emit("join-random-room", { name: nickname.value }, (result) => {
+    if (!result || !result.ok) {
+      showError(result?.error || "Could not find a room. Please try again.");
+      return;
+    }
+    showJoinedRoom(result);
+  });
+}
 function joinRoom(code) {
   showError("");
   socket.emit("join-room", { code, name: nickname.value }, (result) => {
-    if (!result || !result.ok) { showError(result?.error || "Could not join. Try again."); return; }
-    activeRoom = result.code;
-    document.getElementById("activeCode").textContent = activeRoom;
-    entry.classList.add("hidden");
-    chat.classList.remove("hidden");
-    messages.replaceChildren();
-    document.getElementById("messageInput").focus();
+    if (!result || !result.ok) {
+      showError(result?.error || "Could not join. Try again.");
+      return;
+    }
+    showJoinedRoom(result);
   });
 }
-document.getElementById("createBtn").addEventListener("click", () => {
-  socket.emit("create-room", (result) => {
-    if (result?.ok) joinRoom(result.code);
-    else showError("Could not create a room. Please try again.");
-  });
-});
+document.getElementById("createBtn").addEventListener("click", joinRandomRoom);
 document.getElementById("joinBtn").addEventListener("click", () => joinRoom(roomCode.value));
 roomCode.addEventListener("keydown", (event) => { if (event.key === "Enter") joinRoom(roomCode.value); });
-roomCode.addEventListener("input", () => { roomCode.value = roomCode.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 5); });
+roomCode.addEventListener("input", () => { roomCode.value = roomCode.value.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20); });
 document.getElementById("messageForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const input = document.getElementById("messageInput");
@@ -40,8 +51,12 @@ document.getElementById("messageForm").addEventListener("submit", (event) => {
 });
 document.getElementById("leaveBtn").addEventListener("click", () => location.reload());
 document.getElementById("copyBtn").addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText(activeRoom); document.getElementById("copyBtn").textContent = "Copied!"; }
-  catch { document.getElementById("copyBtn").textContent = activeRoom; }
+  try {
+    await navigator.clipboard.writeText(activeRoom);
+    document.getElementById("copyBtn").textContent = "Copied!";
+  } catch {
+    document.getElementById("copyBtn").textContent = activeRoom;
+  }
 });
 socket.on("chat-history", (history) => { messages.replaceChildren(); history.forEach(addMessage); });
 socket.on("chat-message", addMessage);
@@ -52,7 +67,9 @@ socket.on("system-message", (text) => {
   messages.appendChild(el);
   messages.scrollTop = messages.scrollHeight;
 });
-socket.on("room-count", (count) => { document.getElementById("roomCount").textContent = count + (count === 1 ? " person" : " people"); });
+socket.on("room-count", (count) => {
+  document.getElementById("roomCount").textContent = count + "/10 people";
+});
 function addMessage(message) {
   const bubble = document.createElement("div");
   bubble.className = "bubble";
